@@ -40,9 +40,13 @@ fn handle_connection(mut stream: TcpStream) {
         let mut buffer = [0; 10];
         let len = match stream.peek(&mut buffer) {
             Ok(num) => num,
-            Err(_) => continue,
+            Err(_) => {
+                println!("No data");
+                continue;
+            }
         };
 
+        println!("About to read");
         stream.read(&mut buffer).unwrap();
         println!("Received {} bytes", len);
         println!("Data: {}", String::from_utf8_lossy(&buffer[..]));
