@@ -30,7 +30,8 @@ fn handle_connection(mut stream: TcpStream) {
 
     stream.set_nonblocking(true).unwrap();
 
-    let mut position = 0;
+    let mut position: usize = 0;
+
     loop {
         stream.write(&image[0..64]).unwrap();
 
@@ -53,7 +54,8 @@ fn handle_connection(mut stream: TcpStream) {
         println!("Received {} bytes", len);
         println!("Data: {}", String::from_utf8_lossy(&buffer[..]));
 
-        if buffer.starts_with(b"hello") {
+        let erasing: u8 = 13;
+        if buffer.contains(&erasing) {
             println!("Erasing");
             break;
         }
@@ -61,8 +63,45 @@ fn handle_connection(mut stream: TcpStream) {
     // Start of sending packets
     position += 64;
 
+    stream.set_nonblocking(false).unwrap();
+
+    loop {
+        let mut buffer = [0; 1];
+
+        let _ = match stream.peek(&mut buffer) {
+            Ok(_) => stream.read_exact(&mut buffer).unwrap(),
+            Err(_) => {
+                println!("No data");
+                continue;
+            }
+        };
+
+        let ready: u8 = 11;
+        if buffer.contains(&ready) {
+            println!("Ready for image");
+            break;
+        }
+    }
+
     while position <= image.len() {
-        let mut buffer = [0; 10];
+        let mut buffer = [0; 1];
+        let mut length_of_data: usize = 32;
+        let _ = match stream.peek(&mut buffer) {
+            Ok(_) => stream.read(&mut buffer).unwrap(),
+            Err(_) => {
+                println!("No data");
+                continue;
+            }
+        };
+        if length_of_data > buffer[0] as usize {
+            length_of_data = buffer[0] as usize;
+        }
+        stream
+            .write(&image[position..(position + length_of_data)])
+            .unwrap();
+
+        stream.flush().unwrap();
+        position += length_of_data;
     }
 }
 
