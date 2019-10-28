@@ -9,7 +9,9 @@ use std::time::Duration;
 use hello::ThreadPool;
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    let ip_address = fs::read_to_string("ip_address.txt").unwrap();
+
+    let listener = TcpListener::bind(ip_address).unwrap();
     let pool = ThreadPool::new(4);
 
     for stream in listener.incoming().take(2) {
