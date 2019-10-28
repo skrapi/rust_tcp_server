@@ -98,6 +98,9 @@ fn handle_connection(mut stream: TcpStream) {
         if length_of_data > buffer[0] as usize {
             length_of_data = buffer[0] as usize;
         }
+        if length_of_data == 0 {
+            continue;
+        }
         stream
             .write(&image[position..(position + length_of_data)])
             .unwrap();
