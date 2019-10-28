@@ -54,7 +54,8 @@ fn handle_connection(mut stream: TcpStream) {
         println!("Received {} bytes", len);
         println!("Data: {}", String::from_utf8_lossy(&buffer[..]));
 
-        let erasing: u8 = 13;
+        //        let erasing: u8 = 13;
+        let erasing: u8 = 51;
         if buffer.contains(&erasing) {
             println!("Erasing");
             break;
@@ -76,7 +77,8 @@ fn handle_connection(mut stream: TcpStream) {
             }
         };
 
-        let ready: u8 = 11;
+        // let ready: u8 = 11;
+        let ready: u8 = 49;
         if buffer.contains(&ready) {
             println!("Ready for image");
             break;
