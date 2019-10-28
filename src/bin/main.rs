@@ -104,6 +104,10 @@ fn handle_connection(mut stream: TcpStream) {
 
         stream.flush().unwrap();
         position += length_of_data;
+        println!(
+            "Progress {} %",
+            100.0 * position as f64 / image.len() as f64
+        );
     }
 }
 
