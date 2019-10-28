@@ -4,6 +4,7 @@ use std::net::TcpListener;
 use std::net::TcpStream;
 
 use std::thread;
+use std::time::Duration;
 
 use hello::ThreadPool;
 
@@ -31,10 +32,16 @@ fn handle_connection(mut stream: TcpStream) {
 
         stream.flush().unwrap();
 
-        let mut buffer = [0; 10];
-        stream.read(&mut buffer).unwrap();
+        thread::sleep(Duration::from_secs(1));
 
-        println!("Received data: {:?}", buffer);
+        let mut buffer = [0; 10];
+        let len = match stream.peek(&mut buffer) {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+        stream.read(&mut buffer).unwrap();
+        println!("Received {} bytes", len);
 
         if buffer.starts_with(b"0x13ff") {
             break;
