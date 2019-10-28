@@ -28,6 +28,8 @@ fn handle_connection(mut stream: TcpStream) {
 
     println!("Image read in");
 
+    stream.set_nonblocking(true).unwrap();
+
     let mut position = 0;
     loop {
         stream.write(&image[0..64]).unwrap();
