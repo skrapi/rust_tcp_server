@@ -24,25 +24,25 @@ fn main() {
 }
 
 fn handle_connection(mut stream: TcpStream) {
-    let mut buffer = [0; 512];
-    stream.read(&mut buffer).unwrap();
+    let image = read_in_image();
 
-    let get = b"GET / HTTP/1.1\r\n";
-    let sleep = b"GET /sleep HTTP/1.1\r\n";
+    loop {
+        stream.write(&image[0..64]).unwrap();
 
-    let (status_line, filename) = if buffer.starts_with(get) {
-        ("HTTP/1.1 200 OK\r\n\r\n", "hello.html")
-    } else if buffer.starts_with(sleep) {
-        thread::sleep(Duration::from_secs(5));
-        ("HTTP/1.1 200 OK\r\n\r\n", "hello.html")
-    } else {
-        ("HTTP/1.1 404 NOT FOUND\r\n\r\n", "404.html")
-    };
+        stream.flush().unwrap();
 
-    let contents = fs::read_to_string(filename).unwrap();
+        let mut buffer = [0; 10];
+        stream.read(&mut buffer).unwrap();
 
-    let response = format!("{}{}", status_line, contents);
+        println!("Received data: {:?}", buffer);
 
-    stream.write(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
+        if buffer.starts_with(b"0x13ff") {
+            break;
+        }
+    }
+}
+
+fn read_in_image() -> Vec<u8> {
+    let image = fs::read("firmware_geyser_controller.production.bl2").unwrap();
+    image
 }
