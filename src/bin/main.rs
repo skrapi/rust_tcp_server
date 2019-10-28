@@ -51,7 +51,7 @@ fn handle_connection(mut stream: TcpStream) {
         println!("Received {} bytes", len);
         println!("Data: {}", String::from_utf8_lossy(&buffer[..]));
 
-        if buffer.starts_with(b"0x13ff") {
+        if buffer.starts_with(b"hello") {
             println!("Erasing");
             break;
         }
