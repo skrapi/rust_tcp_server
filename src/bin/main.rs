@@ -27,10 +27,13 @@ fn handle_connection(mut stream: TcpStream) {
     let image = read_in_image();
 
     println!("Image read in");
+
+    let mut position = 0;
     loop {
         stream.write(&image[0..64]).unwrap();
 
         stream.flush().unwrap();
+        println!("Header Sent");
 
         thread::sleep(Duration::from_secs(1));
 
@@ -42,10 +45,18 @@ fn handle_connection(mut stream: TcpStream) {
 
         stream.read(&mut buffer).unwrap();
         println!("Received {} bytes", len);
+        println!("Data: {}", String::from_utf8_lossy(&buffer[..]));
 
         if buffer.starts_with(b"0x13ff") {
+            println!("Erasing");
             break;
         }
+    }
+    // Start of sending packets
+    position += 64;
+
+    while position <= image.len() {
+        let mut buffer = [0; 10];
     }
 }
 
