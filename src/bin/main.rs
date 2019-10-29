@@ -96,6 +96,8 @@ fn handle_connection(mut stream: TcpStream) {
                 continue;
             }
         };
+
+        println!("Data: {:?}", buffer);
         if length_of_data > buffer[0] as usize {
             length_of_data = buffer[0] as usize;
         }
