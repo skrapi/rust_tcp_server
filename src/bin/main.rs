@@ -107,7 +107,7 @@ fn handle_connection(mut stream: TcpStream) {
         }
         if position >= image.len() {
             break;
-        } else if position + length_of_data >= image.len() {
+        } else if position + length_of_data > image.len() {
             length_of_data = image.len() - position;
         }
         stream
