@@ -101,7 +101,7 @@ fn handle_connection(mut stream: TcpStream) {
             }
         };
 
-        let length_of_data = buffer[0] as usize + ((buffer[1] as usize) << 8);
+        let length_of_data = buffer[0] as usize + (buffer[1] as usize);
 
         stream
             .write(&image[position..(position + length_of_data)])
