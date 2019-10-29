@@ -24,10 +24,13 @@ fn main() {
 }
 
 fn handle_connection(mut stream: TcpStream) {
+    // Read in firmware image
     let image: Vec<u8> = read_in_image();
 
     println!("Image read in");
 
+    // Send Header and wait for response
+    // 0x13ff returned will mean it is erasing
     stream.set_nonblocking(true).unwrap();
 
     let mut position: usize = 0;
@@ -40,7 +43,7 @@ fn handle_connection(mut stream: TcpStream) {
 
         thread::sleep(Duration::from_secs(1));
 
-        let mut buffer = [0 as u8; 10];
+        let mut buffer = [0 as u8; 2];
         let len = match stream.peek(&mut buffer) {
             Ok(num) => num,
             Err(_) => {
@@ -52,7 +55,7 @@ fn handle_connection(mut stream: TcpStream) {
         println!("About to read");
         stream.read(&mut buffer).unwrap();
         println!("Received {} bytes", len);
-        println!("Data: {}", String::from_utf8_lossy(&buffer[..]));
+        println!("Data: {:?}", buffer);
 
         let erasing: u8 = 13;
         if buffer.contains(&erasing) {
