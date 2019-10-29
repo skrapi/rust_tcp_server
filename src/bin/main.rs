@@ -43,7 +43,7 @@ fn handle_connection(mut stream: TcpStream) {
 
         thread::sleep(Duration::from_secs(1));
 
-        let mut buffer = [0 as u8; 2];
+        let mut buffer = [0 as u8; 32];
         let len = match stream.peek(&mut buffer) {
             Ok(num) => num,
             Err(_) => {
