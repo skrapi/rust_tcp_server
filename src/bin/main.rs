@@ -88,8 +88,8 @@ fn handle_connection(mut stream: TcpStream) {
         }
     }
 
-    while position <= image.len() {
-        let mut buffer = [0 as u8; 2];
+    loop {
+        let mut buffer = [0 as u8; 1];
         let _ = match stream.peek(&mut buffer) {
             Ok(_) => {
                 stream.read(&mut buffer).unwrap();
@@ -101,7 +101,13 @@ fn handle_connection(mut stream: TcpStream) {
             }
         };
 
-        let length_of_data = buffer[0] as usize + (buffer[1] as usize);
+        let length_of_data = buffer[0] as usize;
+        if length_of_data == 0 {
+            continue;
+        }
+        if position + length_of_data > image.len() {
+            break;
+        }
 
         stream
             .write(&image[position..(position + length_of_data)])
