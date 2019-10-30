@@ -24,8 +24,10 @@ fn main() {
 }
 
 fn handle_connection(mut stream: TcpStream) {
+    // Get mac address from geyser controller
+
     // Read in firmware image
-    let image: Vec<u8> = read_in_image();
+    let image: Vec<u8> = read_in_image("firmware_geyser_controller.production.bl2");
 
     println!("Image read in");
 
@@ -123,7 +125,13 @@ fn handle_connection(mut stream: TcpStream) {
     }
 }
 
-fn read_in_image() -> Vec<u8> {
-    let image = fs::read("firmware_geyser_controller.production.bl2").unwrap();
+fn read_in_image(filename: &str) -> Vec<u8> {
+    let image = fs::read(filename);
+
+    let image = match image {
+        Ok(file) => file,
+        Err(_) => vec![0],
+    };
+
     image
 }
