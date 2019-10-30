@@ -26,11 +26,13 @@ fn main() {
 fn handle_connection(mut stream: TcpStream) {
     // Get mac address from geyser controller
     // TODO add read of mac address
-    let mut buffer = [0 as u8; 32];
+    let mut buffer = [0 as u8; 17];
+    let len = stream.peek(&mut buffer).unwrap();
+    println!("Length: {}", len);
     stream.read(&mut buffer).unwrap();
-    println!("Mac address: {}", String::from_utf8_lossy(&buffer));
-
     let filename = format!("{}{}", &(String::from_utf8_lossy(&buffer))[..], ".bl2");
+    println!("Filename: {}", filename);
+
     // Read in firmware image
     let image: Vec<u8> = read_in_image(&filename);
 
