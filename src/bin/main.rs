@@ -25,11 +25,21 @@ fn main() {
 
 fn handle_connection(mut stream: TcpStream) {
     // Get mac address from geyser controller
+    // TODO add read of mac address
+    let mut buffer = [0 as u8; 32];
+    stream.read(&mut buffer).unwrap();
+    println!("Mac address: {}", String::from_utf8_lossy(&buffer));
 
     // Read in firmware image
     let image: Vec<u8> = read_in_image("firmware_geyser_controller.production.bl2");
 
-    println!("Image read in");
+    // Check if image exists
+    if image.len() == 1 {
+        println!("Image was not found");
+        return;
+    } else {
+        println!("Image found, starting bootload process");
+    }
 
     // Send Header and wait for response
     // 0x13ff returned will mean it is erasing
@@ -126,9 +136,7 @@ fn handle_connection(mut stream: TcpStream) {
 }
 
 fn read_in_image(filename: &str) -> Vec<u8> {
-    let image = fs::read(filename);
-
-    let image = match image {
+    let image = match fs::read(filename) {
         Ok(file) => file,
         Err(_) => vec![0],
     };
