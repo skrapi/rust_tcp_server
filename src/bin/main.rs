@@ -26,6 +26,7 @@ fn main() {
 fn handle_connection(mut stream: TcpStream) {
     // Get mac address from geyser controller
     // TODO add read of mac address
+    // TODO implement BufReader instead of buffer
     let mut buffer = [0 as u8; 17];
     let len = stream.peek(&mut buffer).unwrap();
     println!("Length: {}", len);
