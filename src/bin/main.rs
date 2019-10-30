@@ -31,7 +31,7 @@ fn handle_connection(mut stream: TcpStream) {
     println!("Mac address: {}", String::from_utf8_lossy(&buffer));
 
     // Read in firmware image
-    let image: Vec<u8> = read_in_image("firmware_geyser_controller.production.bl2");
+    let image: Vec<u8> = read_in_image(format!("{}{}", String::from_utf8_lossy(&buffer), ".bl2"));
 
     // Check if image exists
     if image.len() == 1 {
