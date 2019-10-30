@@ -30,8 +30,9 @@ fn handle_connection(mut stream: TcpStream) {
     stream.read(&mut buffer).unwrap();
     println!("Mac address: {}", String::from_utf8_lossy(&buffer));
 
+    let filename = format!("{}{}", &(String::from_utf8_lossy(&buffer))[..], ".bl2");
     // Read in firmware image
-    let image: Vec<u8> = read_in_image(format!("{}{}", String::from_utf8_lossy(&buffer), ".bl2"));
+    let image: Vec<u8> = read_in_image(&filename);
 
     // Check if image exists
     if image.len() == 1 {
