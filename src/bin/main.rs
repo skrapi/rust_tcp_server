@@ -46,6 +46,7 @@ fn handle_connection(mut stream: TcpStream) {
         stream.write(b"OK").unwrap();
     }
 
+    thread::sleep(Duration::from_secs(3));
     // Send Header and wait for response
     // 0x13ff returned will mean it is erasing
     stream.set_nonblocking(true).unwrap();
