@@ -123,6 +123,7 @@ fn handle_connection(mut stream: TcpStream) {
         if length_of_data == 0 {
             continue;
         }
+
         if position >= image.len() {
             break;
         } else if position + length_of_data > image.len() {
@@ -139,6 +140,8 @@ fn handle_connection(mut stream: TcpStream) {
             100.0 * position as f64 / image.len() as f64
         );
     }
+
+    println!("Completed bootloading");
 }
 
 fn read_in_image(filename: &str) -> Vec<u8> {
