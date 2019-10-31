@@ -43,7 +43,7 @@ fn handle_connection(mut stream: TcpStream) {
         return;
     } else {
         println!("Image found, starting bootload process");
-        stream.write(b"OK").unwrap();
+        //        stream.write(b"OK").unwrap();
     }
 
     // Send Header and wait for response
