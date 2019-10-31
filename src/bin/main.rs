@@ -63,11 +63,14 @@ fn handle_connection(mut stream: TcpStream) {
 
         let mut buffer = [0 as u8; 32];
         let len = match stream.peek(&mut buffer) {
-            Ok(0) => {
-                println!("Zero data");
-                continue;
+            Ok(num) => {
+                if num > 0 {
+                    num
+                } else {
+                    println!("Zero data");
+                    continue;
+                }
             }
-            Ok(num) => num,
             Err(_) => {
                 println!("No data");
                 continue;
