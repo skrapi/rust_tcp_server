@@ -142,7 +142,10 @@ fn handle_connection(mut stream: TcpStream) {
 fn read_in_image(filename: &str) -> Vec<u8> {
     let image = match fs::read(filename) {
         Ok(file) => file,
-        Err(_) => vec![0],
+        Err(e) => {
+            eprintln!("Error: {}", e);
+            vec![0]
+        }
     };
 
     image
