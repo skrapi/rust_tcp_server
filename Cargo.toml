@@ -1,5 +1,5 @@
 [package]
-name = "hello"
+name = "bootloading_server"
 version = "0.1.0"
 authors = ["sylvan <sylvan@plentify.co.za>"]
 edition = "2018"
